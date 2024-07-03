@@ -1,4 +1,7 @@
-import batch
+import os
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from best_practices.batch import prepare_data
 from datetime import datetime
 import pandas as pd
 
@@ -15,13 +18,12 @@ def test_prepare_data():
 
     columns = ['PULocationID', 'DOLocationID', 'tpep_pickup_datetime', 'tpep_dropoff_datetime']
     df = pd.DataFrame(data, columns=columns)
-
-    #print(df)
-
-    actual_features= 1
-    #batch.prepare_data(df)
-    expected_features= 1
-
-    assert actual_features==expected_features
-    
+    categorical = ['PULocationID', 'DOLocationID']
+    df_out = prepare_data(df,categorical)   
+    actual_features = df_out.copy()
+    expected_features=  pd.DataFrame([    
+    (str(-1), str(-1), dt(1, 1), dt(1, 10), 9.0),
+    (str(1), str(1), dt(1, 2), dt(1, 10), 8.0)     
+    ], columns=['PULocationID', 'DOLocationID', 'tpep_pickup_datetime', 'tpep_dropoff_datetime','duration'])    
+    assert actual_features.equals(expected_features) 
 
